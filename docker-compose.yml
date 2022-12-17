@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  # Définition du premier service avec le nom "mysql" en utilisant le dockerfile "./mysql/Dockerfile"
+  mysql:
+    build: ./mysql
+    ports:
+      - "3306:3306"
+
+  # Définition du second service avec le nom "httpd" en utilisant le dockerfile "./httpd/Dockerfile"
+  httpd:
+    build: ./httpd
+    ports:
+      - "80:80"
+    depends_on:
+      - mysql

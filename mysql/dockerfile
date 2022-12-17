@@ -1,0 +1,11 @@
+# Définition de l'image MySQL
+FROM mysql:5.7
+
+# Création d'un utilisateur nommé "service" avec le mot de passe "toto"
+RUN echo "CREATE USER 'service'@'%' IDENTIFIED BY 'toto'" | mysql -u root
+
+# Attribution des privilèges d'accès à la base de données "Users" à l'utilisateur "service"
+RUN echo "GRANT ALL PRIVILEGES ON Users.* TO 'service'@'%'" | mysql -u root
+
+# Import des données dans la base de données "Users" à partir d'un fichier SQL
+COPY Users.sql /docker-entrypoint-initdb.d/

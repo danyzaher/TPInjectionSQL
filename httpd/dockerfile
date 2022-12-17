@@ -1,0 +1,24 @@
+# Définition de l'image de base pour notre conteneur Apache
+FROM httpd:latest
+
+# Installation des paquets nécessaires pour exécuter nos scripts PHP
+RUN apt-get update && \
+    apt-get install -y php libapache2-mod-php && \
+    rm -rf /var/lib/apt/lists/*
+
+# Création du dossier "TPinjectionSQL" dans lequel nous allons mettre nos scripts PHP
+RUN mkdir -p /usr/local/apache2/htdocs/TPinjectionSQL
+
+# Copie de nos scripts PHP dans le dossier "TPinjectionSQL"
+COPY ../web/* /usr/local/apache2/htdocs/TPinjectionSQL/
+
+# Configuration d'Apache pour qu'il puisse exécuter nos scripts PHP
+RUN echo "<FilesMatch \.php$>" >> /usr/local/apache2/conf/httpd.conf && \
+    echo "    SetHandler application/x-httpd-php" >> /usr/local/apache2/conf/httpd.conf && \
+    echo "</FilesMatch>" >> /usr/local/apache2/conf/httpd.conf
+
+# Exposition du port 80 pour que le conteneur puisse être accessible depuis l'extérieur
+EXPOSE 80
+
+# Démarrage d'Apache au lancement du conteneur
+CMD ["httpd-foreground"]
